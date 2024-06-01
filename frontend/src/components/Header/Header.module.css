@@ -1,0 +1,28 @@
+.header{
+    padding: 24px 0px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo_link{
+    font-size: 20px;
+    color: rgb(0, 108, 255);
+}
+
+.nav{
+    display: flex;
+    justify-content: space-between;
+}
+
+.auth_nav{
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+  
+}
+
+.auth_nav_link{
+    color: rgb(0, 108, 255)
+}
