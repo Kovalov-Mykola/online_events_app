@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import Button from '../Button/Button';
 import styles from './RegistrationForm.module.css';
-import userRegister from '../../services/AuthAPI/UserRegister';
+// import userRegister from '../../services/AuthAPI/UserRegister';
 import Modal from '../Modal/Modal';
 import RegisterNotification from '../RegisterNotification/RegisaterNotification';
+import {useUserRegisterMutation} from './../../redux/userAPI';
+import { useNavigate } from 'react-router-dom';
 
 const patterns = {
     email: /^(?=.*[a-z, A-Z]).{1,}@[a-z]{1,}\.(com|ua|dp|uk)$/
@@ -17,11 +19,15 @@ const RegistrationForm = () => {
     const[disabled, setDisabled] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userName, setUserName] = useState('');
+    const [userRegister, {isError}] = useUserRegisterMutation();
+    const navigate = useNavigate();
 
   
    const  handleCloseModal = () => {
       setIsModalOpen(false);
-      document.body.removeEventListener('keydown', handleEscPress)
+      document.body.removeEventListener('keydown', handleEscPress);
+      navigate('/');
+
     }
 
    const handleModalBackdropClick = (evt) => {
@@ -75,20 +81,24 @@ if(evt.currentTarget === evt.target) {
         } else {
             setPasswordError(false)
         }
-    
-       
     }
 
     const handleFormSubmit = async (evt) => {
         evt.preventDefault();
         try{
-        const response = await userRegister(formData);
-        const data = await response.json()  
-        console.log(data);
+        await userRegister(formData).unwrap();
         handleOpenModal()
         setUserName(formData.username)
         setDisabled(true)
         setFormData({username:"", email:"", password: ""})
+
+        // const response = await userRegister(formData);
+        // const data = await response.json()  
+        // console.log(data);
+        // handleOpenModal()
+        // setUserName(formData.username)
+        // setDisabled(true)
+        // setFormData({username:"", email:"", password: ""})
         }
         catch(error){
             console.log(error.message)

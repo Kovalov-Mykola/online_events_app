@@ -20,7 +20,7 @@ try{
     const mail = {
         to: email,
         subject: 'Email verification',
-        html: `<a target="_blank" href="http://localhost:3000/login">Confirm your email</a>`,
+        html: `<a target="_blank" href="http://localhost:8888/api/users/verify/${verificationToken}">Confirm your email</a>`,
         // html: `<a target="_blank" href="http://localhost:8888/api/users/verify/${verificationToken}">Confirm your email</a>`
     }
     await sendEmail(mail);

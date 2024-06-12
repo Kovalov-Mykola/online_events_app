@@ -10,9 +10,12 @@ if(!user){
 
 await User.findByIdAndUpdate(user._id, {verify: true, verificationToken: null});
 
-res.status(200).json({
-    message: "Verification successful"
-})
+res.status(200).send(
+   ` <div style="flex-direction: column; gap: 24px; width: 100vw; height: 100vh; display: flex;  justify-content: center; align-items: center;">
+   <p style="font-size: 28px; text-align: center;">Your email has been successfully verified!</p>
+   <a style="font-size: 20px; color: black; text-decoration: underline;" href="http://localhost:3000/login">Press here to log in</a>
+   </div>`
+)
 }
 
 module.exports = verifyEmail;

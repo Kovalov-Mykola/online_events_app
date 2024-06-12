@@ -1,17 +1,24 @@
 import { useState } from 'react';
 import styles from './LoginForm.module.css';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
+import{useUserLoginMutation} from './../../redux/userAPI';
 import Button from '../Button/Button';
+import {  useDispatch } from 'react-redux';
+import {setIsLoggedIn, setUser, setToken} from './../../redux/authSlice'
 
 const LoginForm = () => {
     const [formData, setFormData] = useState({email: "", password: ""});
     const [emailError, setEmailError] = useState(false);
-    const [passwordError, setPasswordError] = useState(false)
-
+    const [passwordError, setPasswordError] = useState(false);
+    const [userLogin, {isError}] = useUserLoginMutation();
     const handleInputChange = (evt) => {
         setFormData({...formData, [evt.target.name]: evt.target.value})
     
     }
+
+    const navigate = useNavigate();
+
+    const dispatch = useDispatch();
 
     const handleInputFocus = (evt) => {
         if(evt.target.name === "email"){
@@ -22,7 +29,7 @@ const LoginForm = () => {
         }
     }
 
-    const handleFormSubmit = (evt) => {
+    const handleFormSubmit = async (evt) => {
         evt.preventDefault();
         if(!formData.email){
             setEmailError(true);
@@ -31,10 +38,19 @@ const LoginForm = () => {
             setPasswordError(true)
         }
         if(!formData.email || !formData.password) return
-
-        // Comment
-
-        setFormData({email: "", password: ""})
+try{
+  const response = await userLogin(formData);  
+       localStorage.setItem('token', JSON.stringify(response.data.data.token))
+        setFormData({email: "", password: ""})  
+        dispatch(setIsLoggedIn(true))
+        dispatch(setUser(response.data.data.user))
+        dispatch(setToken(response.data.data.token))
+        navigate('/');
+        
+} catch(error){
+    console.log(error.message)
+}
+       
 
     }
     return (
